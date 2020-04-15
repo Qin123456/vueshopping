@@ -11,9 +11,9 @@
         <el-table-column prop="path" label="路径"></el-table-column>
         <el-table-column prop="level" label="权限等级">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.level === '0'">标签一</el-tag>
-            <el-tag type="success" v-if="scope.row.level === '1'">标签二</el-tag>
-            <el-tag type="info" v-if="scope.row.level === '2'">标签三</el-tag>
+            <el-tag v-if="scope.row.level === '0'">权限一</el-tag>
+            <el-tag type="success" v-if="scope.row.level === '1'">权限二</el-tag>
+            <el-tag type="info" v-if="scope.row.level === '2'">权限三</el-tag>
           </template>
         </el-table-column>
       </el-table>

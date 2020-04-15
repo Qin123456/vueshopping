@@ -126,8 +126,9 @@ export default {
     cursor: pointer;
   }
 }
-.el-main {
+.el-main{
   background-color: #eaedf1;
+  max-height: 892px;
 }
 
 .iconfont {

@@ -49,7 +49,13 @@
               placement="top"
               :enterable="false"
             >
-              <el-button type="warning" size="mini" icon="el-icon-s-tools" circle></el-button>
+              <el-button
+                type="warning"
+                size="mini"
+                icon="el-icon-s-tools"
+                circle
+                @click="showrolesdialog(scope.row)"
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -107,6 +113,27 @@
         <el-button type="primary" @click="edituser">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="分配角色" :visible.sync="rolesdialogVisible" width="50%" @close="closeroles">
+      <div>
+        <p>当前用户：{{userinfo.username}}</p>
+        <p>当前角色：{{userinfo.roles_name}}</p>
+        <p>
+          分配新角色：
+          <el-select v-model="selectId" placeholder="请选择">
+            <el-option
+              v-for="item in rolesData"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="rolesdialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="saveinforoles">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -133,10 +160,18 @@ export default {
         pagenum: 1,
         pagesize: 2
       },
+      userinfo: {
+        username: '',
+        roles_name: '',
+        userid: ''
+      },
       total: 0,
       userlist: [],
+      rolesData: [],
+      selectId: '',
       adddialogVisible: false,
       editdialogVisible: false,
+      rolesdialogVisible: false,
       addForm: {
         username: '',
         password: '',
@@ -179,7 +214,7 @@ export default {
       const { data: res } = await this.$http.get('users', {
         params: this.queryinfo
       })
-      if (res.meta.status !== 200) return this.$message.error('res.meta.msg')
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.userlist = res.data.users
       this.total = res.data.total
       console.log(res)
@@ -259,6 +294,31 @@ export default {
             message: '已取消删除'
           })
         })
+    },
+    async showrolesdialog(userinfo) {
+      this.rolesdialogVisible = true
+      this.userinfo.userid = userinfo.id
+      this.userinfo.username = userinfo.username
+      this.userinfo.roles_name = userinfo.role_name
+      const { data: res } = await this.$http.get('roles')
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.rolesData = res.data
+    },
+    async saveinforoles() {
+      if (!this.selectId) return this.$message.warning('请选择角色')
+      const { data: res } = await this.$http.put(
+        'users/' + this.userinfo.userid + '/role',
+        {
+          rid: this.selectId
+        }
+      )
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.$message.success('分配角色成功')
+      this.getuserlist()
+      this.rolesdialogVisible = false
+    },
+    closeroles() {
+      this.selectId = ''
     }
   }
 }
