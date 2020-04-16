@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import './plugins/element.js'
+import tabletree from 'vue-table-with-tree-grid'
 import './assets/css/initialize .css'
 import './assets/css/iconfont/iconfont.css'
 import axios from 'axios'
@@ -12,6 +13,7 @@ axios.interceptors.request.use(config => {
 })
 
 Vue.prototype.$http = axios
+Vue.component('table-tree', tabletree)
 
 Vue.config.productionTip = false
 

@@ -323,12 +323,3 @@ export default {
   }
 }
 </script>
-<style lang="less" scoped>
-.el-breadcrumb,
-.el-row {
-  margin-bottom: 15px;
-}
-.el-table {
-  margin-bottom: 15px;
-}
-</style>

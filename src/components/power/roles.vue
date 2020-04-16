@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>权限管理</el-breadcrumb-item>
       <el-breadcrumb-item>角色列表</el-breadcrumb-item>
     </el-breadcrumb>
@@ -283,13 +283,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.el-breadcrumb {
-  margin-bottom: 15px;
-}
-.el-row {
-  margin-bottom: 15px;
-  border-top: 1 solid #eee;
-}
 .el-tag {
   margin: 0 5px;
 }
