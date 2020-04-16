@@ -29,9 +29,13 @@
           <el-tag type="success" v-if="scope.row.cat_level===1">二级</el-tag>
           <el-tag type="info" v-if="scope.row.cat_level===2">三级</el-tag>
         </template>
-        <template slot="caozuo">
-          <el-button type="primary" icon="el-icon-edit">编辑</el-button>
-          <el-button type="danger" icon="el-icon-delete">删除</el-button>
+        <template slot="caozuo" slot-scope="scope">
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            @click="showupdatelogVisible(scope.row.cat_id)"
+          >编辑</el-button>
+          <el-button type="danger" icon="el-icon-delete" @click="deletecate(scope.row.cat_id)">删除</el-button>
         </template>
       </table-tree>
       <el-pagination
@@ -69,6 +73,22 @@
         <el-button type="primary" @click="addcateForm">确 定</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="修改分类" :visible.sync="updatelogVisible" width="50%" @close="reseupdateForm">
+      <el-form
+        ref="upedatacateDataRes"
+        :model="upedatacateData"
+        label-width="80px"
+        :rules="upedatacateDataRules"
+      >
+        <el-form-item label="分类名称" prop="cat_name">
+          <el-input v-model="upedatacateData.cat_name"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="updatelogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updatecate">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -79,6 +99,7 @@ export default {
   data() {
     return {
       adddialogVisible: false,
+      updatelogVisible: false,
       parentData: [],
       cascaderprops: {
         expandTrigger: 'hover',
@@ -92,6 +113,12 @@ export default {
         cat_name: '',
         cat_pid: 0,
         cat_level: 0
+      },
+      upedatacateData: {},
+      upedatacateDataRules: {
+        cat_name: [
+          { required: true, message: '请输入分类名称', trigger: 'blur' }
+        ]
       },
       addformDataRules: {
         cat_name: [
@@ -188,6 +215,50 @@ export default {
         this.adddialogVisible = false
         this.getcategories()
       })
+    },
+    async showupdatelogVisible(id) {
+      this.updatelogVisible = true
+      const { data: res } = await this.$http.get('categories/' + id)
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      this.upedatacateData = res.data
+    },
+    updatecate() {
+      this.$refs.upedatacateDataRes.validate(async valid => {
+        if (!valid) return this.$message.error('验证未通过')
+        const { data: res } = await this.$http.put(
+          'categories/' + this.upedatacateData.cat_id,
+          { cat_name: this.upedatacateData.cat_name }
+        )
+        if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+        this.$message.success('修改分类成功')
+        this.updatelogVisible = false
+        this.getcategories()
+      })
+    },
+    reseupdateForm() {
+      this.$refs.upedatacateDataRes.resetFields()
+    },
+    deletecate(id) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          const { data: res } = await this.$http.delete('categories/' + id)
+          if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.getcategories()
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     }
   }
 }
