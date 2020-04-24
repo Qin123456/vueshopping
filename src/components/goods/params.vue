@@ -209,7 +209,7 @@ export default {
       )
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       res.data.forEach(item => {
-        item.attr_vals = item.attr_vals ? item.attr_vals.split(',') : []
+        item.attr_vals = item.attr_vals ? item.attr_vals.split(' ') : []
         item.inputVisible = false
         item.inputValue = ''
       })
