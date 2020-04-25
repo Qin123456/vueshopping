@@ -20,8 +20,11 @@ html,body,#app{
   margin-bottom: 15px;
 }
 .el-step__title{
-  font-size: 14px;
+  font-size: 13px;
 }
-.ql-editor {
+.el-steps{
+  margin-bottom: 25px;
+}
+.ql-container{
   min-height: 300px;
 }

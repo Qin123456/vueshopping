@@ -72,7 +72,6 @@ export default {
       })
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.goodslist = res.data
-      console.log('res.data :', res.data)
     },
     goodsCurrentChange(val) {
       this.queryinfo.pagenum = val
