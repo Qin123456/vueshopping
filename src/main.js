@@ -20,6 +20,7 @@ axios.interceptors.request.use(config => {
 })
 axios.interceptors.response.use(config => {
   NProgress.done()
+  return config
 })
 Vue.prototype.$http = axios
 Vue.component('table-tree', tabletree)
